@@ -5,6 +5,8 @@ import org.javaboy.platform.domain.leaderboard.model.entity.LeaderBoardConfig;
 import org.javaboy.platform.domain.leaderboard.model.entity.Member;
 import org.javaboy.platform.domain.leaderboard.repository.LeaderBoardConfigRepository;
 import org.javaboy.platform.domain.leaderboard.repository.LeaderBoardRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -22,6 +24,9 @@ import java.util.stream.IntStream;
 @Component
 public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LeaderBoardRepositoryImpl.class);
+
     /**
      * 排榜榜中一个桶的key
      * 1.榜单id
@@ -32,7 +37,11 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
     /**
      * 使用lua脚本保证进入排行时的原子性；
      */
-    private String enterLeaderBoardScript = "local size = redis.call('ZCARD', KEYS[1])\n" + "if size < tonumber(ARGV[3]) then\n" + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n" + "else\n" + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n" + "    redis.call('ZPOPMIN', KEYS[1], 0, 0)\n" + "end";
+    private String enterLeaderBoardScript = "local size = redis.call('ZCARD', KEYS[1])\n"
+            + "if size < tonumber(ARGV[3]) then\n"
+            + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n" + "else\n"
+            + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n"
+            + "    redis.call('ZPOPMIN', KEYS[1], 0, 0)\n" + "end";
 
     @Autowired
     private Jedis jedis;
@@ -56,6 +65,7 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
         // 上榜数量限制
         Integer limit = leaderBoardConfig.getLimit();
         String realBid = getRealBid(buckets, itemRule, logicBid);
+        LOGGER.info("进入排行榜|realBid:{}|item:{}|totalScore:{}", realBid, itemRule, score);
         jedis.eval(enterLeaderBoardScript, 1, realBid, String.valueOf(score), itemRule, String.valueOf(limit));
     }
 

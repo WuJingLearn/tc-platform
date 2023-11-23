@@ -3,16 +3,20 @@ package org.javaboy.common.utils.exception;
 /**
  * @author:majin.wj
  */
-public class BizException extends RuntimeException{
+public class BizException extends RuntimeException {
 
-    public String message;
+    public String code;
 
-    public BizException(String message){
+    public BizException(String message) {
         super(message);
     }
 
-    @Override
-    public String getMessage() {
-        return message;
+    public BizException(String code, String message) {
+        super(message);
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

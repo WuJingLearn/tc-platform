@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author:majin.wj
  * 亚运会排行榜扩展点
  */
-@Component
+@Component("hangzhouAsianGame")
 public class HangzhouAsianGameExtension extends LeaderBoardExtension {
 
     @Autowired

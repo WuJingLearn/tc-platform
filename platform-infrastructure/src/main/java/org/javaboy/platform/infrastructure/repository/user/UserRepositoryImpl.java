@@ -1,9 +1,10 @@
 package org.javaboy.platform.infrastructure.repository.user;
 
-import org.javaboy.platform.client.request.user.UserCreateRequest;
+import org.javaboy.platform.domain.user.model.entity.User;
 import org.javaboy.platform.domain.user.repository.UserRepository;
 import org.javaboy.platform.infrastructure.dao.user.UserMapper;
 import org.javaboy.platform.infrastructure.dataobject.user.UserDO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,15 +20,12 @@ public class UserRepositoryImpl implements UserRepository {
     private  UserMapper userMapper;
 
     @Override
-    public void createUser(UserCreateRequest request) {
+    public int createUser(User user) {
         UserDO userDO = new UserDO();
-        userDO.setUsername(request.getUsername());
-        userDO.setPassword(request.getPassword());
-        userDO.setAvatar(request.getAvatar());
+        BeanUtils.copyProperties(user,userDO);
         userDO.setIsDeleted("n");
         userDO.setGmtCreate(new Date());
         userDO.setGmtModified(new Date());
-        userMapper.insert(userDO);
-
+        return userMapper.insert(userDO);
     }
 }

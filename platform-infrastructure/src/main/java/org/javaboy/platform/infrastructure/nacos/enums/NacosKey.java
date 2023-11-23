@@ -4,6 +4,7 @@ package org.javaboy.platform.infrastructure.nacos.enums;
  * @author:majin.wj
  */
 public enum NacosKey {
+    ;
 
 
     private String key;

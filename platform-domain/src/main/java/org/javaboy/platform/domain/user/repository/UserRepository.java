@@ -1,12 +1,12 @@
 package org.javaboy.platform.domain.user.repository;
 
-import org.javaboy.platform.client.request.user.UserCreateRequest;
+import org.javaboy.platform.domain.user.model.entity.User;
 
 /**
  * @author:majin.wj
  */
 public interface UserRepository {
 
-    void createUser(UserCreateRequest request);
+    int createUser(User user);
 
 }

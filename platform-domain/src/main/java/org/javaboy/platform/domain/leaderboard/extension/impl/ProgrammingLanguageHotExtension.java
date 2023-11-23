@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author:majin.wj
  * 编程语言每周热度排行
  */
-@Component
+@Component("programmingLanguage")
 public class ProgrammingLanguageHotExtension extends LeaderBoardExtension {
 
 
@@ -28,7 +28,6 @@ public class ProgrammingLanguageHotExtension extends LeaderBoardExtension {
     @Override
     public Long refreshAndGetScoreRecord(EnterRequest request) {
         String recordKey = String.format(programingScore, DateUtils.getMondayDate(), request.getRuleItem());
-//        Integer scoreRecord = Optional.ofNullable(redisDal.get(recordKey)).map(Integer::valueOf).orElse(0);
         Long addScore = request.getScore();
         return redisDal.incrBy(recordKey, addScore);
     }

@@ -11,7 +11,7 @@ import java.util.List;
 public interface LeaderBoardRepository {
 
 
-    public void enterLeaderBoard(String logicBid, String itemRule, Long score);
+    void enterLeaderBoard(String logicBid, String itemRule, Long score);
 
     List<Member> queryLeaderBoard(String logicBid, Integer topN);
 

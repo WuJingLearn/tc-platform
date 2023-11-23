@@ -1,6 +1,6 @@
 package org.javaboy.platform.adapter.controller.leaderboard;
 
-import org.javaboy.common.utils.Result;
+import org.javaboy.common.utils.PlatformResult;
 import org.javaboy.platform.application.leaderboard.service.LeaderBoardAppService;
 import org.javaboy.platform.client.request.leaderboard.EnterRequest;
 import org.javaboy.platform.client.request.leaderboard.QueryRequest;
@@ -20,20 +20,38 @@ public class LeaderBoardController {
     @Autowired
     private LeaderBoardAppService leaderBoardAppService;
 
-    @PostMapping("/enter")
-    public Result<Boolean> enterLeaderboard(@RequestBody EnterRequest request) {
+    /**
+     *
+     * {
+     *     scene:"",
+     *     "ruleItem","java",
+     *     "score":"1"
+     * }
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/enterLeaderboard")
+    public PlatformResult<Boolean> enterLeaderboard(@RequestBody EnterRequest request) {
         leaderBoardAppService.enterLeaderBoard(request);
-        return Result.success(true);
+        return PlatformResult.success(true);
     }
 
-    @GetMapping("/get")
-    public Result<List<Member>> queryLeaderBoard(@RequestParam(required = true) String scene, @RequestParam(required = false, defaultValue = "10") Integer topN,
-                                                 @RequestParam(required = false) String ruleItem) {
+    /**
+     * 在需要分不同逻辑榜单时，需要传ruleItem参数，需要通过ruleItem确定逻辑榜单;
+     * @param scene
+     * @param topN
+     * @param ruleItem
+     * @return
+     */
+    @GetMapping("/getLeaderboard")
+    public PlatformResult<List<Member>> queryLeaderBoard(@RequestParam(required = true) String scene, @RequestParam(required = false, defaultValue = "10") Integer topN,
+                                                         @RequestParam(required = false) String ruleItem) {
         QueryRequest queryRequest = new QueryRequest();
         queryRequest.setScene(scene);
         queryRequest.setTopN(topN);
         queryRequest.setRuleItem(ruleItem);
-        return Result.success(leaderBoardAppService.queryLeaderBoard(queryRequest));
+        return PlatformResult.success(leaderBoardAppService.queryLeaderBoard(queryRequest));
     }
 
 }
