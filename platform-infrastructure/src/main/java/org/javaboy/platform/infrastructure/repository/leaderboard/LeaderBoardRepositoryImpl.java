@@ -25,7 +25,6 @@ import java.util.stream.IntStream;
 @Component
 public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LeaderBoardRepositoryImpl.class);
 
     /**
@@ -40,8 +39,8 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
      */
     private String enterLeaderBoardScript = "local size = redis.call('ZCARD', KEYS[1])\n"
             + "if size < tonumber(ARGV[3]) then\n"
-            + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n" + "else\n"
             + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n"
+            + "else\n" + "    redis.call('ZADD', KEYS[1], ARGV[1], ARGV[2])\n"
             + "    redis.call('ZPOPMIN', KEYS[1], 0, 0)\n" + "end";
 
     @Autowired
@@ -72,16 +71,16 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
 
     @Override
     public List<Member> queryLeaderBoard(String logicBid, Integer topN) {
-        LOGGER.info("查询排行榜|logicBid:{}",logicBid);
+        LOGGER.info("查询排行榜|logicBid:{}", logicBid);
         LeaderBoardConfig leaderBoardConfig = configRepository.getLeaderBoardConfig(getScene(logicBid));
         topN = Math.min(topN, leaderBoardConfig.getLimit());
         // 大顶推,分数最大的元素在堆顶
         PriorityQueue<Tuple> queue = new PriorityQueue<>(leaderBoardConfig.getBucket() * topN, Comparator.reverseOrder());
         for (int i = 0; i < leaderBoardConfig.getBucket(); i++) {
             String bucketKey = String.format(LEADER_KEY, logicBid, i);
-            LOGGER.info("查询排行榜分桶|bucketKey:{}",bucketKey);
+            LOGGER.info("查询排行榜分桶|bucketKey:{}", bucketKey);
             Set<Tuple> tuples = jedis.zrevrangeWithScores(bucketKey, 0, topN);
-            LOGGER.info("查询排行榜分桶|bucketKey:{}|members:{}",bucketKey, JSON.toJSONString(tuples));
+            LOGGER.info("查询排行榜分桶|bucketKey:{}|members:{}", bucketKey, JSON.toJSONString(tuples));
             if (CollectionUtils.isNotEmpty(tuples)) {
                 queue.addAll(tuples);
             }
@@ -106,6 +105,20 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
 
     private String getScene(String bidKey) {
         return bidKey.split("_")[0];
+    }
+
+
+    void add() {
+        int limit = 10;
+        String member = "a";
+        TreeSet<String> leaderBoard = new TreeSet<>();
+        // 由于不是原子性的，假设size =9;同时两个元素并发访问，那么此时集合中数量就变成11个
+        if (leaderBoard.size() < limit) {
+            leaderBoard.add(member);
+        } else {
+            leaderBoard.add(member);
+            leaderBoard.pollFirst();
+        }
     }
 
 }
