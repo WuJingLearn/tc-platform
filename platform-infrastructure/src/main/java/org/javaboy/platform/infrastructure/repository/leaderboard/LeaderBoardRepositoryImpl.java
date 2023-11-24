@@ -1,5 +1,6 @@
 package org.javaboy.platform.infrastructure.repository.leaderboard;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.collections4.CollectionUtils;
 import org.javaboy.platform.domain.leaderboard.model.entity.LeaderBoardConfig;
 import org.javaboy.platform.domain.leaderboard.model.entity.Member;
@@ -62,7 +63,7 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
         LeaderBoardConfig leaderBoardConfig = configRepository.getLeaderBoardConfig(getScene(logicBid));
         // 分桶数量
         Integer buckets = leaderBoardConfig.getBucket();
-        // 上榜数量限制
+        // 上榜数量限制b
         Integer limit = leaderBoardConfig.getLimit();
         String realBid = getRealBid(buckets, itemRule, logicBid);
         LOGGER.info("进入排行榜|realBid:{}|item:{}|totalScore:{}", realBid, itemRule, score);
@@ -71,13 +72,16 @@ public class LeaderBoardRepositoryImpl implements LeaderBoardRepository {
 
     @Override
     public List<Member> queryLeaderBoard(String logicBid, Integer topN) {
+        LOGGER.info("查询排行榜|logicBid:{}",logicBid);
         LeaderBoardConfig leaderBoardConfig = configRepository.getLeaderBoardConfig(getScene(logicBid));
         topN = Math.min(topN, leaderBoardConfig.getLimit());
         // 大顶推,分数最大的元素在堆顶
         PriorityQueue<Tuple> queue = new PriorityQueue<>(leaderBoardConfig.getBucket() * topN, Comparator.reverseOrder());
         for (int i = 0; i < leaderBoardConfig.getBucket(); i++) {
             String bucketKey = String.format(LEADER_KEY, logicBid, i);
+            LOGGER.info("查询排行榜分桶|bucketKey:{}",bucketKey);
             Set<Tuple> tuples = jedis.zrevrangeWithScores(bucketKey, 0, topN);
+            LOGGER.info("查询排行榜分桶|bucketKey:{}|members:{}",bucketKey, JSON.toJSONString(tuples));
             if (CollectionUtils.isNotEmpty(tuples)) {
                 queue.addAll(tuples);
             }

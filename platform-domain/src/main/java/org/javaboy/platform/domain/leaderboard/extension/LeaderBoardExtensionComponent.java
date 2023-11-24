@@ -28,4 +28,9 @@ public class LeaderBoardExtensionComponent extends LeaderBoardExtension {
         return Optional.ofNullable(extensionMap.get(request.getScene())).map(e -> e.getBid(request)).orElse(null);
     }
 
+    @Override
+    protected String getScene() {
+        return null;
+    }
+
 }

@@ -1,6 +1,7 @@
 package org.javaboy.platform;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
@@ -13,15 +14,16 @@ public class ControllerTest {
 
     @PostConstruct
     public void init(){
-        System.out.println("controller test 1");
+        String s = test2();
+        System.out.println("controller test 1"+s);
     }
-    @GetMapping("/get")
+    @RequestMapping("/get")
     public String test2(){
         return "zs";
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/a")
     public String test3(){
         return "zs";
     }

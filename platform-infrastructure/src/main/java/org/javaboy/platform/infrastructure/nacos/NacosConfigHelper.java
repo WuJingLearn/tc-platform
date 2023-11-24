@@ -53,7 +53,7 @@ public class NacosConfigHelper {
                 dataCache.put(dataId, data);
                 return data;
             } catch (NacosException e) {
-                log.error("get nacos data error dataId:{}", dataId, e);
+                log.error("get nacos data error dataId:{},errorMsg:{}", dataId,e.getMessage());
                 return null;
             }
         }

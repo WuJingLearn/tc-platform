@@ -28,4 +28,9 @@ public class HangzhouAsianGameExtension extends LeaderBoardExtension {
         return null;
     }
 
+    @Override
+    protected String getScene() {
+        return null;
+    }
+
 }

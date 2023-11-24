@@ -13,7 +13,8 @@ import java.util.List;
 /**
  * @author:majin.wj
  */
-@RestController("/leaderboard")
+@RestController
+@RequestMapping("/leaderboard")
 public class LeaderBoardController {
 
 

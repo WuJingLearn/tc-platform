@@ -4,6 +4,7 @@ import org.javaboy.common.utils.DateUtils;
 import org.javaboy.platform.client.request.leaderboard.EnterRequest;
 import org.javaboy.platform.client.request.leaderboard.LeaderBoardRequest;
 import org.javaboy.platform.domain.infra.redis.RedisDal;
+import org.javaboy.platform.domain.leaderboard.constants.LeaderBoardSceneConstant;
 import org.javaboy.platform.domain.leaderboard.extension.LeaderBoardExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,7 @@ public class ProgrammingLanguageHotExtension extends LeaderBoardExtension {
 
     private String programingScore = "programing_score_record_%s_%s";
 
-    private String programingBidKey = "programing_bid_%s";
-
-
+    private String programingBidKey = "%s_bid_%s";
 
     @Autowired
     private RedisDal redisDal;
@@ -35,7 +34,12 @@ public class ProgrammingLanguageHotExtension extends LeaderBoardExtension {
 
     @Override
     public String getBid(LeaderBoardRequest request) {
-        return String.format(programingBidKey,DateUtils.getMondayDate());
+        return String.format(programingBidKey,getScene(),DateUtils.getMondayDate());
+    }
+
+    @Override
+    protected String getScene() {
+        return LeaderBoardSceneConstant.PROGRAMMING_LANGUAGE_SCENE;
     }
 
 }

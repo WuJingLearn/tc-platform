@@ -38,6 +38,7 @@ public abstract class LeaderBoardExtension {
 
     /**
      * 更新并得到分数记录
+     *
      * @param request
      * @return
      */
@@ -45,9 +46,12 @@ public abstract class LeaderBoardExtension {
 
     /**
      * 获取对应的逻辑榜单
+     *
      * @param request
      * @return
      */
     public abstract String getBid(LeaderBoardRequest request);
+
+    protected abstract String getScene();
 
 }

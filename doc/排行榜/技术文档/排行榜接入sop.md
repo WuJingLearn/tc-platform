@@ -24,15 +24,25 @@ limit 用来限制排行榜可上榜数量
 
 
 ## 入榜操作
-http://localhost:8080/leaderboard/enter post 
+http://localhost:8080/leaderboard/enterLeaderboard post 
 ``` json
 {
-    scene:"programmingLanguage",
-    "ruleItem","java",
-    "score":"1" //每次加入的分数
+  "scene":"programmingLanguage",
+  "ruleItem":"java",
+  "score":"1"
+}
+{
+  "scene":"programmingLanguage",
+  "ruleItem":"c++",
+  "score":"3"
 }
 ```
+添加两个成员进入榜单;根据分桶路由，两个成员根据hash进入到不同分桶中。
+![img.png](..%2Fimg%2Fimg.png)
+![img_1.png](..%2Fimg%2Fimg_1.png)
 
-## 查询
-http://localhost:8080/leaderboard/get get
-查询排榜
+## 查询排行榜
+http://localhost:8080/leaderboard/getLeaderboard?scene=programmingLanguage&&topN=10
+查询排行榜,会查询所有分桶topN元素,然后在内存中进行汇总操作，取所有分桶元素中的topN.
+![img_2.png](..%2Fimg%2Fimg_2.png)
+![img_3.png](..%2Fimg%2Fimg_3.png)

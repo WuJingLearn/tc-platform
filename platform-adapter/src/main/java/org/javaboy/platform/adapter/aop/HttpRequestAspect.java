@@ -21,7 +21,7 @@ public class HttpRequestAspect {
 
     private static Logger LOG = LoggerFactory.getLogger(HttpRequestAspect.class);
 
-    @Pointcut("execution(public * org.javaboy.platform.adapter.controller.*.*(..))")
+    @Pointcut("execution(public * org.javaboy.platform.adapter.controller..*(..))")
     public void pointCut() {
     }
 
@@ -31,11 +31,11 @@ public class HttpRequestAspect {
         try {
             result = (PlatformResult) joinPoint.proceed();
         } catch (BizException e) {
-            result = PlatformResult.fail(e.getCode(),e.getMessage());
+            LOG.error("Controller接口业务异常", e);
+            result = PlatformResult.fail(e.getCode(), e.getMessage());
         } catch (Throwable e) {
-            LOG.error("Controller接口请求出错", e);
-            result = PlatformResult.fail("SystemError","system error " + e.getMessage());
-
+            LOG.error("Controller接口系统异常", e);
+            result = PlatformResult.fail("SystemError", "system error " + e.getMessage());
         }
         return result;
 

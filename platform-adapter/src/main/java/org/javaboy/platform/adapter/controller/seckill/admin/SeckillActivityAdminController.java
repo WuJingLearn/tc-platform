@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
  * @author:majin.wj
  * 内部管理接口
  */
-@RestController("/admin/seckill/activity")
+@RequestMapping("/admin/seckill/activity")
+@RestController
 public class SeckillActivityAdminController {
 
     @Autowired

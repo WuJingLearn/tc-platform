@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -47,7 +48,12 @@ public class NacosConfigSeriviceMock implements ConfigService {
 
     @Override
     public String getConfigAndSignListener(String dataId, String group, long timeoutMs, Listener listener) throws NacosException {
-        return Optional.ofNullable(mockConfig.get(dataId)).orElse(configService.getConfigAndSignListener(dataId, group, timeoutMs, listener));
+        String data = mockConfig.get(dataId);
+        if (Objects.nonNull(data)) {
+            return data;
+        }
+        return configService.getConfigAndSignListener(dataId, group, timeoutMs, listener);
+//        return Optional.ofNullable(mockConfig.get(dataId)).orElse(configService.getConfigAndSignListener(dataId, group, timeoutMs, listener));
     }
 
     @Override
