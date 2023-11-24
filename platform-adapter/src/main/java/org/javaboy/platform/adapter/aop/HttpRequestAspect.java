@@ -38,7 +38,6 @@ public class HttpRequestAspect {
             result = PlatformResult.fail("SystemError", "system error " + e.getMessage());
         }
         return result;
-
     }
 
 }

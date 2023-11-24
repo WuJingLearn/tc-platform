@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author:majin.wj
  * 用户接口
  */
-@RequestMapping("seckill/activity")
+@RequestMapping("/seckill/activity")
 @RestController
 public class SeckillActivityController {
 }
