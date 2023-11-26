@@ -1,18 +1,17 @@
-package org.javaboy.platform.application.gamecenter.command;
+package org.javaboy.platform.infrastructure.dataobject.gamecenter;
 
 /**
  * @author:majin.wj
- *
- * 兑换活动奖励配置；
  */
-public class GameActivityAwardConfigCreateCommand {
+public class GameActivityAwardDO {
 
-    private Long activityId;
+    private Long id;
 
     /**
      * 道具名称
      */
     private String assetName;
+
     /**
      * 道具码
      */
@@ -24,9 +23,9 @@ public class GameActivityAwardConfigCreateCommand {
     private String url;
 
     /**
-     * 道具数量
+     * 关联的活动id
      */
-    private Integer amount;
+    private Long activityId;
 
     /**
      * 兑换配置,兑换这个道具需要消耗的用户个人资产
@@ -42,6 +41,4 @@ public class GameActivityAwardConfigCreateCommand {
      * 库存配置；该商品的库存；
      */
     private String inventoryConfig;
-
-
 }

@@ -9,7 +9,6 @@ import org.javaboy.platform.application.gamecenter.command.GameActivityCreateCom
  */
 public interface GameActivityService {
 
-
     /**
      * 创建活动
      * @param activityCreateCommand
@@ -24,5 +23,12 @@ public interface GameActivityService {
      */
 
     boolean addGameActivityAwardConfig(GameActivityAwardConfigCreateCommand activityAwardConfigCreateCommand);
+
+
+    /**
+     * 发布活动
+     * @param activityId
+     */
+    void publishGameActivity(String activityId);
 
 }

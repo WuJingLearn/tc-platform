@@ -1,16 +1,15 @@
-package org.javaboy.platform.application.gamecenter.command;
+package org.javaboy.platform.domain.gamecenter.model.entity;
 
 /**
  * @author:majin.wj
- *
- * 兑换活动奖励配置；
+ * 活动奖励;兑换配置信息，疲劳度信息，库存信息以json的方式存放在数据库中
  */
-public class GameActivityAwardConfigCreateCommand {
+public class GameActivityAward {
 
     private Long activityId;
 
     /**
-     * 道具名称
+     * 奖励信息
      */
     private String assetName;
     /**
@@ -18,15 +17,7 @@ public class GameActivityAwardConfigCreateCommand {
      */
     private String assetCode;
 
-    /**
-     * 道具图片
-     */
     private String url;
-
-    /**
-     * 道具数量
-     */
-    private Integer amount;
 
     /**
      * 兑换配置,兑换这个道具需要消耗的用户个人资产
@@ -42,6 +33,4 @@ public class GameActivityAwardConfigCreateCommand {
      * 库存配置；该商品的库存；
      */
     private String inventoryConfig;
-
-
 }

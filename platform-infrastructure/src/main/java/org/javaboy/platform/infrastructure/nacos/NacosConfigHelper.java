@@ -50,6 +50,7 @@ public class NacosConfigHelper {
                 if (StringUtils.isBlank(data)) {
                     data = EMP_CONFIG_CACHE;
                 }
+                // todo 本地缓存加过期时间
                 dataCache.put(dataId, data);
                 return data;
             } catch (NacosException e) {
