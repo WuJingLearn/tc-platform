@@ -60,6 +60,24 @@ public class NacosConfigHelper {
         }
     }
 
+    public boolean publishData(String dataId,String groupId,String data){
+        try {
+            return configService.publishConfig(dataId,groupId,data);
+        } catch (NacosException e) {
+            log.error("Nacos发布配置失败|dataId:{}|groupId:{}|data:{}|errorMsg:{}",dataId,groupId,data,e.getMessage());
+            return false;
+        }
+    }
+
+    public String getData(String dataId,String groupId){
+        try {
+            return configService.getConfig(dataId, groupId, 3000);
+        } catch (NacosException e) {
+            log.error("Nacos获取配置失败|dataId:{}|groupId:{}|errorMsg:{}",dataId,groupId,e.getMessage());
+            throw new RuntimeException("nacos获取数据失败",e);
+        }
+    }
+
     class DataChangeListener implements Listener {
         private String dataId;
 

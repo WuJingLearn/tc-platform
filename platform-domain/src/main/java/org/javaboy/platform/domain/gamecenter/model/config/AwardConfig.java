@@ -1,4 +1,4 @@
-package org.javaboy.platform.application.gamecenter.model.config;
+package org.javaboy.platform.domain.gamecenter.model.config;
 
 import lombok.Data;
 
@@ -13,6 +13,11 @@ public class AwardConfig {
      * 道具码
      */
     private String assetCode;
+
+    /**
+     * 奖励唯一码
+     */
+    private String awardCode;
 
     /**
      * 道具图片

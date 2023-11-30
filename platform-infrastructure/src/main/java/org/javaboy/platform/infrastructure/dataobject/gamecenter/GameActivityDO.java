@@ -1,5 +1,6 @@
 package org.javaboy.platform.infrastructure.dataobject.gamecenter;
 
+import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
  * @author:majin.wj
  */
 @Data
+@TableName("game_activity")
 public class GameActivityDO {
 
     private Long id;

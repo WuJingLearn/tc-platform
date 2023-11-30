@@ -1,10 +1,13 @@
-package org.javaboy.platform.application.gamecenter.command;
+package org.javaboy.platform.application.gamecenter.model.request;
+
+import lombok.Data;
 
 /**
  * @author:majin.wj
  *
  * 兑换活动奖励配置；
  */
+@Data
 public class GameActivityAwardConfigCreateCommand {
 
     private Long activityId;

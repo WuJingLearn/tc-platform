@@ -1,5 +1,7 @@
 package org.javaboy.common.cache.model;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 /**
  * @author:majin.wj
  */

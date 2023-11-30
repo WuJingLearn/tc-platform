@@ -2,6 +2,7 @@ package org.javaboy.platform.infrastructure.redis;
 
 import org.javaboy.platform.domain.infra.redis.DistributedCacheService;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -11,8 +12,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedissionDistributedService implements DistributedCacheService {
+
     @Override
     public void put(String key, String value) {
+
 
     }
 

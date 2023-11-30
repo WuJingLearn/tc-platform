@@ -1,10 +1,13 @@
-package org.javaboy.platform.application.gamecenter.command;
+package org.javaboy.platform.application.gamecenter.model.request;
+
+import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @author:majin.wj
  */
+@Data
 public class GameActivityCreateCommand {
 
 

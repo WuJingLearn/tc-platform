@@ -1,8 +1,13 @@
 package org.javaboy.platform.infrastructure.dataobject.gamecenter;
 
+import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Data;
+
 /**
  * @author:majin.wj
  */
+@Data
+@TableName("game_activity_award")
 public class GameActivityAwardDO {
 
     private Long id;
@@ -16,6 +21,8 @@ public class GameActivityAwardDO {
      * 道具码
      */
     private String assetCode;
+
+    private String awardCode;
 
     /**
      * 道具图片

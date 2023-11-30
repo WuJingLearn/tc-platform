@@ -1,7 +1,7 @@
 package org.javaboy.platform.application.gamecenter.service;
 
-import org.javaboy.platform.application.gamecenter.command.GameActivityAwardConfigCreateCommand;
-import org.javaboy.platform.application.gamecenter.command.GameActivityCreateCommand;
+import org.javaboy.platform.application.gamecenter.model.request.GameActivityAwardConfigCreateCommand;
+import org.javaboy.platform.application.gamecenter.model.request.GameActivityCreateCommand;
 
 /**
  * @author:majin.wj
