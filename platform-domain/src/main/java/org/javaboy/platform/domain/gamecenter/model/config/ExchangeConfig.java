@@ -14,6 +14,6 @@ public class ExchangeConfig {
      */
     private String type;
 
-    private Integer amount;
+    private Long amount;
 
 }

@@ -41,7 +41,6 @@ public class FatigueServiceImpl implements FatigueService {
 
     @Autowired
     private DistributedCacheService distributedCacheService;
-
     @Override
     public Map<String, Pair<Integer, Integer>> checkAwardFatigue(GameExchangeContext gameExchangeContext) {
         Map<String, Pair<Integer, Integer>> periodMap = new HashMap<>();
@@ -69,4 +68,20 @@ public class FatigueServiceImpl implements FatigueService {
         return periodMap;
     }
 
+    @Override
+    public void recordAwardFatigue(GameExchangeContext gameExchangeContext) {
+        AwardConfig awardConfig = gameExchangeContext.getAwardConfig();
+        GameActivityConfig gameActivityConfig = gameExchangeContext.getGameActivityConfig();
+
+        String periodKey = null;
+        switch (FatigueType.valueOf(awardConfig.getFatigueConfig().getType().toUpperCase())) {
+            case DAILY:
+                periodKey = String.format(BENEFIT_FATIGUE_DAY_KEY, awardConfig.getAwardCode(), DateUtils.toDay(), gameExchangeContext.getUid());
+                break;
+            case PERIOD:
+                periodKey = String.format(BENEFIT_FATIGUE_KEY, awardConfig.getAwardCode(), DateUtils.dateStr(gameActivityConfig.getStartTime()), gameExchangeContext.getUid());
+                break;
+        }
+        distributedCacheService.increment(periodKey,1);
+    }
 }

@@ -25,7 +25,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public void decrInventory(String activityName, String awardCode, Long amount) {
-
+    public boolean decrInventory(String activityName, String awardCode, Long amount) {
+        return true;
     }
 }

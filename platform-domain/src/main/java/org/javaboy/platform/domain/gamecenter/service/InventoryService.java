@@ -37,6 +37,6 @@ public interface InventoryService {
      * @param awardCode
      * @param amount
      */
-    void decrInventory(String activityName,String awardCode,Long amount);
+    boolean decrInventory(String activityName,String awardCode,Long amount);
 
 }

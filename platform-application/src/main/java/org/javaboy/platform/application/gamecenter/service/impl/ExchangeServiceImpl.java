@@ -11,15 +11,20 @@ import org.javaboy.platform.domain.gamecenter.model.config.AwardConfig;
 import org.javaboy.platform.domain.gamecenter.model.config.ExchangeConfig;
 import org.javaboy.platform.domain.gamecenter.model.config.GameActivityConfig;
 import org.javaboy.platform.domain.gamecenter.model.config.InventoryConfig;
+import org.javaboy.platform.domain.gamecenter.model.entity.AssetUserDetail;
 import org.javaboy.platform.domain.gamecenter.service.FatigueService;
+import org.javaboy.platform.domain.gamecenter.service.GameAssetDomainService;
 import org.javaboy.platform.domain.gamecenter.service.InventoryService;
 import org.javaboy.platform.domain.gamecenter.service.impl.GamePointService;
+import org.javaboy.platform.domain.infra.redis.lock.DistributedLock;
+import org.javaboy.platform.domain.infra.redis.lock.DistributedLockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author:majin.wj
@@ -27,8 +32,16 @@ import java.util.Map;
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
 
+    private static final String exchangeLock = "exchange_lock_%s_%s_%s";
+
+    @Autowired
+    private DistributedLockFactory distributedLockFactory;
+
     @Autowired
     private GameActivityConfigService activityConfigService;
+
+    @Autowired
+    private GameAssetDomainService gameAssetDomainService;
 
     @Autowired
     private GamePointService gamePointService;
@@ -86,7 +99,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             InventoryInfo inventoryInfo = new InventoryInfo();
             if (inventoryConfig == null) {
                 inventoryInfo.setUseInventory(false);
-            }else {
+            } else {
                 inventoryInfo.setUseInventory(true);
                 Long amount = inventoryService.queryInventory(activityName, awardConfig.getAwardCode());
                 inventoryInfo.setAmount(amount);
@@ -100,6 +113,67 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public ExchangeAwardDTO exchange(ExchangeRequest request) {
+        String lockKey = String.format(exchangeLock, request.getActivityName(), request.getAwardCode(), request.getUid());
+        DistributedLock lock = distributedLockFactory.getLock(lockKey);
+        try {
+            if (!lock.tryLock()) {
+                throw new BizException("操作频繁,稍后再试");
+            }
+            // 1.校验幂等
+            // 2.检验兑换条件
+            // 3.校验疲劳度
+            // 4.校验库存
+            GameExchangeContext context = buildContext(request.getActivityName(), request.getUid());
+            GameActivityConfig activityConfig = context.getGameActivityConfig();
+            AwardConfig awardConfig = activityConfig.getAwardConfigs().stream().filter(award -> request.getAwardCode().equals(award.getAwardCode())).findFirst().get();
+            context.setAwardConfig(awardConfig);
+            ExchangeConfig exchangeConfig = awardConfig.getExchangeConfig();
+            if (exchangeConfig != null) {
+                Long amount = gamePointService.queryPoint(request.getUid());
+                if (amount < exchangeConfig.getAmount()) {
+                    throw new BizException("积分不足");
+                }
+            }
+            if (awardConfig.getFatigueConfig() != null) {
+                Map<String, Pair<Integer, Integer>> stringPairMap = fatigueService.checkAwardFatigue(context);
+                Pair<Integer, Integer> fatigue = stringPairMap.get(request.getAwardCode());
+                if (Objects.equals(fatigue.getLeft(), fatigue.getRight())) {
+                    throw new BizException("达到最大兑换次数");
+                }
+            }
+            if (awardConfig.getInventoryConfig() != null) {
+                Long inventory = inventoryService.queryInventory(activityConfig.getActivityName(), awardConfig.getAwardCode());
+                if (inventory <= request.getAmount()) {
+                    throw new BizException("库存不足");
+                }
+            }
+
+            // 1.扣减库存
+            boolean deductInventoryResult = inventoryService.decrInventory(activityConfig.getActivityName(), awardConfig.getAwardCode(), request.getAmount());
+            // 2.扣减用户积分
+            if (exchangeConfig != null) {
+                boolean deductPropertyResult = gamePointService.deductPoint(request.getUid(), exchangeConfig.getAmount());
+            }
+            // 3.发放奖励
+            AssetUserDetail assetUserDetail = new AssetUserDetail();
+            assetUserDetail.setAssetName(awardConfig.getAssetName());
+            assetUserDetail.setAssetCode(awardConfig.getAssetCode());
+            assetUserDetail.setUrl(awardConfig.getUrl());
+            assetUserDetail.setUid(request.getUid());
+            assetUserDetail.setAmount(request.getAmount());
+            //
+            boolean sendAwardResult = gameAssetDomainService.addUserAsset(assetUserDetail);
+            // 4.记录疲劳
+            fatigueService.recordAwardFatigue(context);
+            // 5.记录奖励明细
+
+
+        } catch (Exception e) {
+
+        } finally {
+            lock.unlock();
+        }
+
         return null;
     }
 

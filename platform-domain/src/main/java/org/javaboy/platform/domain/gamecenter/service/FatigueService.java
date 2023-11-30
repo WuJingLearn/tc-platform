@@ -19,4 +19,9 @@ public interface FatigueService {
      * Pair: v1:当前次数  v2: 限制数
      */
     Map<String, Pair<Integer,Integer>> checkAwardFatigue(GameExchangeContext gameExchangeContext);
+
+    /**
+     * 记录奖励疲劳度
+     */
+    void recordAwardFatigue(GameExchangeContext gaameExchangeContext );
 }
