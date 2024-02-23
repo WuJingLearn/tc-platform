@@ -15,7 +15,6 @@ import org.springframework.util.Assert;
 @Component
 public class UserAppService {
 
-
     @Autowired
     private UserRepository userRepository;
 
